@@ -1,0 +1,13 @@
+{
+  "name": "birthvault",
+  "version": "1.0.0",
+  "description": "🎂 精美的生日记录 Web 应用 - 记录亲朋好友的生日，再也不会忘记",
+  "private": true,
+  "scripts": {
+    "dev": "npx wrangler pages dev public/ --d1=DB=birthvault-db --port 8788",
+    "db:init": "npx wrangler d1 execute birthvault-db --local --file=./migrations/0001_initial.sql"
+  },
+  "keywords": ["birthday", "reminder", "cloudflare", "d1"],
+  "author": "",
+  "license": "MIT"
+}
