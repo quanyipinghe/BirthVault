@@ -858,6 +858,250 @@ body::before {
   margin-top: 24px;
 }
 
+/* ===== 农历标签 ===== */
+.lunar-tag {
+  display: inline-block;
+  padding: 1px 6px;
+  margin-right: 4px;
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  vertical-align: middle;
+  line-height: 1.4;
+}
+
+/* ===== 日期触发框 ===== */
+.date-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  user-select: none;
+}
+
+.date-trigger:hover {
+  border-color: var(--color-primary-light);
+}
+
+.date-trigger:active {
+  box-shadow: 0 0 0 3px rgba(232, 117, 106, 0.1);
+}
+
+.date-trigger svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.date-trigger-text {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.date-trigger-text.has-value {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.date-trigger-arrow {
+  width: 16px !important;
+  height: 16px !important;
+  opacity: 0.5;
+}
+
+/* ===== 日期选择器（底部滑出） ===== */
+.datepicker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 300;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-normal);
+}
+
+.datepicker-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.datepicker {
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-body);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(100%);
+  transition: transform var(--transition-slow);
+  overflow: hidden;
+}
+
+.datepicker-overlay.active .datepicker {
+  transform: translateY(0);
+}
+
+/* 顶部工具栏 */
+.datepicker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.datepicker-cancel,
+.datepicker-confirm {
+  border: none;
+  background: none;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.datepicker-cancel {
+  color: var(--text-muted);
+}
+
+.datepicker-cancel:hover {
+  color: var(--text-primary);
+  background: var(--bg-card);
+}
+
+.datepicker-confirm {
+  color: var(--color-primary);
+}
+
+.datepicker-confirm:hover {
+  background: var(--bg-badge);
+}
+
+/* 农历/公历切换 */
+.datepicker-type-toggle {
+  display: flex;
+  background: var(--bg-card);
+  border-radius: var(--radius-full);
+  padding: 3px;
+  border: 1px solid var(--border-color);
+}
+
+.datepicker-type-btn {
+  padding: 6px 18px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.datepicker-type-btn.active {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  box-shadow: 0 2px 8px rgba(232, 117, 106, 0.3);
+}
+
+/* 滚轮主体 */
+.datepicker-body {
+  position: relative;
+  height: 260px;
+  overflow: hidden;
+}
+
+/* 选中行指示器 */
+.datepicker-indicator {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  right: 16px;
+  height: 42px;
+  transform: translateY(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 三列容器 */
+.datepicker-columns {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* 单列 */
+.datepicker-column {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  position: relative;
+  z-index: 2;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.datepicker-column::-webkit-scrollbar {
+  display: none;
+}
+
+/* 列选项 */
+.datepicker-item {
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  scroll-snap-align: center;
+  cursor: pointer;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.datepicker-item.selected {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+/* 上下留白占位（使首尾项能滚到中间） */
+.datepicker-spacer {
+  height: 109px;
+  /* (260 - 42) / 2 */
+  flex-shrink: 0;
+}
+
 /* ===== Toast 通知 ===== */
 .toast-container {
   position: fixed;
@@ -918,18 +1162,22 @@ body::before {
 /* ===== 骨架屏加载 ===== */
 .skeleton {
   background: linear-gradient(90deg,
-    var(--bg-card) 25%,
-    var(--bg-card-hover) 50%,
-    var(--bg-card) 75%
-  );
+      var(--bg-card) 25%,
+      var(--bg-card-hover) 50%,
+      var(--bg-card) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-md);
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .skeleton-card {
@@ -1083,6 +1331,7 @@ body::before {
 
 /* ===== 减少动画偏好 ===== */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

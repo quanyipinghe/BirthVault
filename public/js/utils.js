@@ -5,16 +5,40 @@
 
 /**
  * 计算距离下一个生日还有多少天
- * @param {string} birthday - 生日日期字符串 (YYYY-MM-DD)
+ * @param {Object|string} b - 生日记录对象或日期字符串
  * @returns {number} 距离天数
  */
-function daysUntilBirthday(birthday) {
+function daysUntilBirthday(b) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    const birthday = typeof b === 'string' ? b : b.birthday;
+    const isLunar = typeof b === 'object' && b.lunar === 1;
     const parts = birthday.split('-');
-    const month = parseInt(parts[1], 10);
-    const day = parseInt(parts[2], 10);
+    const bMonth = parseInt(parts[1], 10);
+    const bDay = parseInt(parts[2], 10);
+
+    let month, day;
+    if (isLunar) {
+        // 农历模式：将农历生日转为今年对应的公历日期
+        const thisYear = today.getFullYear();
+        let solar = LunarCalendar.lunar2solar(thisYear, bMonth, bDay, false);
+        if (!solar) {
+            // 日期不存在时（如该年该月无此日），取月末
+            const maxDay = LunarCalendar.monthDays(thisYear, bMonth);
+            solar = LunarCalendar.lunar2solar(thisYear, bMonth, Math.min(bDay, maxDay), false);
+        }
+        if (solar) {
+            month = solar.cMonth;
+            day = solar.cDay;
+        } else {
+            month = bMonth;
+            day = bDay;
+        }
+    } else {
+        month = bMonth;
+        day = bDay;
+    }
 
     // 今年的生日
     let nextBirthday = new Date(today.getFullYear(), month - 1, day);
@@ -22,7 +46,21 @@ function daysUntilBirthday(birthday) {
 
     // 如果今年的生日已过，取明年的
     if (nextBirthday < today) {
-        nextBirthday = new Date(today.getFullYear() + 1, month - 1, day);
+        if (isLunar) {
+            const nextYear = today.getFullYear() + 1;
+            let solar = LunarCalendar.lunar2solar(nextYear, bMonth, bDay, false);
+            if (!solar) {
+                const maxDay = LunarCalendar.monthDays(nextYear, bMonth);
+                solar = LunarCalendar.lunar2solar(nextYear, bMonth, Math.min(bDay, maxDay), false);
+            }
+            if (solar) {
+                nextBirthday = new Date(nextYear, solar.cMonth - 1, solar.cDay);
+            } else {
+                nextBirthday = new Date(today.getFullYear() + 1, month - 1, day);
+            }
+        } else {
+            nextBirthday = new Date(today.getFullYear() + 1, month - 1, day);
+        }
         nextBirthday.setHours(0, 0, 0, 0);
     }
 
@@ -83,12 +121,21 @@ function getZodiacSign(birthday) {
 
 /**
  * 格式化日期为中文显示
- * @param {string} birthday - 生日日期字符串 (YYYY-MM-DD)
+ * @param {Object|string} b - 生日记录对象或日期字符串
  * @returns {string} 格式化后的日期
  */
-function formatDate(birthday) {
+function formatDate(b) {
+    const birthday = typeof b === 'string' ? b : b.birthday;
+    const isLunar = typeof b === 'object' && b.lunar === 1;
     const parts = birthday.split('-');
-    return `${parts[0]}年${parseInt(parts[1], 10)}月${parseInt(parts[2], 10)}日`;
+    const y = parseInt(parts[0], 10);
+    const m = parseInt(parts[1], 10);
+    const d = parseInt(parts[2], 10);
+
+    if (isLunar) {
+        return `农历 ${LunarCalendar.yearToCn(y)}年 ${LunarCalendar.toChinaMonth(m)} ${LunarCalendar.toChinaDay(d)}`;
+    }
+    return `${y}年${m}月${d}日`;
 }
 
 /**
@@ -114,8 +161,18 @@ function formatCountdown(days) {
  * @returns {number} 本月生日数
  */
 function getThisMonthCount(birthdays) {
-    const currentMonth = new Date().getMonth() + 1;
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentYear = now.getFullYear();
     return birthdays.filter(b => {
+        if (b.lunar === 1) {
+            // 农历：将农历月日转公历后判断
+            const parts = b.birthday.split('-');
+            const lm = parseInt(parts[1], 10);
+            const ld = parseInt(parts[2], 10);
+            const solar = LunarCalendar.lunar2solar(currentYear, lm, ld, false);
+            return solar && solar.cMonth === currentMonth;
+        }
         const month = parseInt(b.birthday.split('-')[1], 10);
         return month === currentMonth;
     }).length;
@@ -128,7 +185,7 @@ function getThisMonthCount(birthdays) {
  */
 function getUpcomingCount(birthdays) {
     return birthdays.filter(b => {
-        const days = daysUntilBirthday(b.birthday);
+        const days = daysUntilBirthday(b);
         return days > 0 && days <= 7;
     }).length;
 }
@@ -139,7 +196,7 @@ function getUpcomingCount(birthdays) {
  * @returns {number} 今天生日数
  */
 function getTodayCount(birthdays) {
-    return birthdays.filter(b => daysUntilBirthday(b.birthday) === 0).length;
+    return birthdays.filter(b => daysUntilBirthday(b) === 0).length;
 }
 
 /**
