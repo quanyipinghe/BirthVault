@@ -296,6 +296,17 @@ body::before {
   transform: rotate(15deg);
 }
 
+/* 退出登录按钮 */
+#logoutBtn {
+  border-radius: var(--radius-full);
+}
+
+#logoutBtn:hover {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+  box-shadow: 0 0 12px rgba(231, 111, 81, 0.2);
+}
+
 /* ===== 主内容区域 ===== */
 .main-content {
   max-width: 1200px;

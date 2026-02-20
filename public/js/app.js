@@ -645,6 +645,16 @@ const App = {
 
     // ===== 事件绑定 =====
     bindEvents() {
+        // 退出登录
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+            } catch (e) {
+                // 即使请求失败也跳转到登录页
+            }
+            window.location.href = '/login.html';
+        });
+
         // 主题切换
         document.getElementById('themeToggle').addEventListener('click', () => this.toggleTheme());
 
