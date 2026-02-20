@@ -10,8 +10,7 @@ binding = "DB"
 database_name = "birthvault-db"
 database_id = "02b7b5a1-ca1c-4176-a518-08b0adc643b2" # 部署时替换为实际 database_id
 
-# 管理员登录配置（部署前请修改为安全密码）
-[vars]
-ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "birthvault2025"
-AUTH_SECRET = "birthvault-secret-key-change-me"
+# 管理员登录配置
+# 本地开发时不配置会使用代码中的默认值（admin / birthvault2025）
+# 生产环境请在 Cloudflare Dashboard 中添加加密的 Secrets：
+#   ADMIN_USERNAME, ADMIN_PASSWORD, AUTH_SECRET
