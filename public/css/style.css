@@ -253,16 +253,47 @@ body::before {
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
   backdrop-filter: var(--blur-card);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-normal);
 }
 
 .btn-icon:hover {
   background: var(--bg-card-hover);
   color: var(--text-primary);
+  transform: scale(1.05);
 }
 
 .btn-icon svg {
   width: 20px;
   height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 主题切换按钮 */
+#themeToggle {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+}
+
+#themeToggle:hover {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 0 12px rgba(232, 117, 106, 0.2);
+}
+
+#themeToggle svg {
+  transition: transform var(--transition-normal), opacity var(--transition-normal);
+}
+
+#themeToggle:hover svg {
+  transform: rotate(15deg);
 }
 
 /* ===== 主内容区域 ===== */
