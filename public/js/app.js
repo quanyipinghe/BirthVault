@@ -212,6 +212,9 @@ const App = {
         document.querySelectorAll('.emoji-option').forEach(opt => {
             opt.classList.toggle('selected', opt.dataset.emoji === '🎂');
         });
+        // 重置关系选择
+        document.getElementById('formRelation').value = '';
+        document.querySelectorAll('.relation-chip').forEach(chip => chip.classList.remove('selected'));
     },
 
     // ===== 添加 =====
@@ -229,6 +232,10 @@ const App = {
         document.getElementById('formId').value = id;
         document.getElementById('formName').value = birthday.name;
         document.getElementById('formRelation').value = birthday.relation || '';
+        // 回显关系标签选中状态
+        document.querySelectorAll('.relation-chip').forEach(chip => {
+            chip.classList.toggle('selected', chip.dataset.value === (birthday.relation || ''));
+        });
         document.getElementById('formPhone').value = birthday.phone || '';
         document.getElementById('formNotes').value = birthday.notes || '';
 
@@ -689,6 +696,24 @@ const App = {
             this.state.selectedEmoji = option.dataset.emoji;
             document.querySelectorAll('.emoji-option').forEach(opt => opt.classList.remove('selected'));
             option.classList.add('selected');
+        });
+
+        // 关系标签选择
+        document.getElementById('relationPicker').addEventListener('click', (e) => {
+            const chip = e.target.closest('.relation-chip');
+            if (!chip) return;
+            const value = chip.dataset.value;
+            const isSelected = chip.classList.contains('selected');
+            // 取消所有选中
+            document.querySelectorAll('.relation-chip').forEach(c => c.classList.remove('selected'));
+            if (!isSelected) {
+                // 选中当前
+                chip.classList.add('selected');
+                document.getElementById('formRelation').value = value;
+            } else {
+                // 取消选中则清空
+                document.getElementById('formRelation').value = '';
+            }
         });
 
         // 搜索（防抖）

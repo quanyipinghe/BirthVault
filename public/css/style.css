@@ -851,6 +851,49 @@ body::before {
   background: var(--bg-badge);
 }
 
+/* ===== 关系标签选择器 ===== */
+.relation-picker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.relation-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  background: var(--bg-input);
+  border: 2px solid transparent;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.relation-chip:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-color);
+  transform: translateY(-1px);
+}
+
+.relation-chip.selected {
+  border-color: var(--color-primary);
+  background: var(--bg-badge);
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(232, 117, 106, 0.15);
+}
+
+.relation-chip-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
 .form-actions {
   display: flex;
   gap: 12px;
